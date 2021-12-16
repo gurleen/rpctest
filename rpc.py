@@ -1,13 +1,18 @@
-from collections import UserList
 import functools
-from typing import List
+from loguru import logger
+from typing import List, Callable
 from models import User, UserModel
 from beartype import beartype
+
+from beartype.roar import BeartypeDecorHintPep585DeprecationWarning
+from warnings import simplefilter
+
+simplefilter("ignore", BeartypeDecorHintPep585DeprecationWarning)
 
 
 rpc_functions = {}
 
-def remote_proc(func):
+def remote_proc_deco(func):
     rpc_functions[func.__name__] = func
     @functools.wraps(func)
     def wrapper_decorator(*args, **kwargs):
@@ -16,18 +21,21 @@ def remote_proc(func):
     return wrapper_decorator
 
 
+def remote_proc(func: Callable) -> Callable:
+    return remote_proc_deco(beartype(func))
+
+
 @remote_proc
 async def get_all_users() -> List[UserModel]:
     return await UserModel.from_queryset(User.all())
 
 
 @remote_proc
-@beartype
 async def get_user_by_id(id: int) -> UserModel:
     return await UserModel.from_queryset_single(User.get(id=id))
 
+
 @remote_proc
-@beartype
 async def create_user(username: str, password: str) -> UserModel:
     new_user = await User.create_user(username=username, password=password)
     await new_user.save()
@@ -35,10 +43,16 @@ async def create_user(username: str, password: str) -> UserModel:
 
 
 @remote_proc
-@beartype
-async def login(username: str, password: str) -> bool:
+async def login(username: str, password: str) -> str:
     user = await User.get(username=username)
-    return user.verify(password)
+    if user.verify(password):
+        return user.generate_token()
+
+
+@remote_proc
+async def change_password(user: User, new_pass: str) -> str:
+    print(user)
+    return "hello"
 
 
 @remote_proc

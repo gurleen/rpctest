@@ -12,8 +12,9 @@ sock.connect(server_address)
 bufsock = BufferedSocket(sock, maxsize=64 ** 2)
 
 payload = {
-    "function": "login",
-    "args": ["gurleen", "fdsnkl"]
+    "function": "add",
+    "args": [1, 2],
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.ZT-ypcqw58gj7i_V4PShR0xUfTFz0DRcxf74xGjk49Q"
 }
 
 d = json.dumps(payload).encode("utf-8") + b"\r\n"

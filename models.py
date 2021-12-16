@@ -1,11 +1,14 @@
 from tortoise import fields
-from tortoise.contrib.pydantic.creator import pydantic_queryset_creator
 from tortoise.models import Model
 from tortoise.contrib.pydantic import pydantic_model_creator
 from passlib.context import CryptContext
+from jose import jwt
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
+SECRET_KEY = "DontUseInProduction!"
 
 
 class User(Model):
@@ -17,10 +20,18 @@ class User(Model):
     def verify(self, plain_pass):
         return pwd_context.verify(plain_pass, self.password)
 
+    def generate_token(self):
+        return jwt.encode({"user_id": self.id}, SECRET_KEY, algorithm="HS256")
+
     @staticmethod
     async def create_user(**kwargs):
         kwargs["password"] = generate_pass_hash(kwargs["password"])
         return await User.create(**kwargs)
+
+    @staticmethod
+    async def get_user_from_token(token: str) -> "User":
+        decoded = jwt.decode(token, SECRET_KEY, algorithms="HS256")
+        return await User.get(id=decoded.pop("user_id"))
 
 UserModel = pydantic_model_creator(User, exclude=("password",))
 
