@@ -37,16 +37,19 @@ async def handle_request(reader: asyncio.StreamReader, writer: asyncio.StreamWri
                 "time": datetime.now(),
                 "value": value_json
             }
-        except BeartypeException:
+        except BeartypeException as e:
+            print(e)
             return_value = {
                 "success": False,
                 "error": "You messed up your types!"
             }
+        """
         except:
             return_value = {
                 "success": False,
                 "error": "Still trying to figure it out!"
             }
+        """
         writer.write(orjson.dumps(return_value) + b"\r\n")
         await writer.drain()
 
@@ -60,10 +63,10 @@ async def main():
     logger.info("Generating schemas")
     await Tortoise.generate_schemas()
 
-    user = await User.create(username="gurleen", password="password")
+    user = await User.create_user(username="gurleen", password="password")
     await user.save()
 
-    user2 = await User.create(username="trey", password="password2")
+    user2 = await User.create_user(username="trey", password="password2")
     await user2.save()
 
     logger.info("Starting async event loop")

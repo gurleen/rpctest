@@ -12,8 +12,8 @@ sock.connect(server_address)
 bufsock = BufferedSocket(sock, maxsize=64 ** 2)
 
 payload = {
-    "function": "get_user_by_id",
-    "args": [1]
+    "function": "login",
+    "args": ["gurleen", "fdsnkl"]
 }
 
 d = json.dumps(payload).encode("utf-8") + b"\r\n"
