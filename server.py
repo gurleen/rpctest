@@ -23,7 +23,6 @@ def result_json(result: Any) -> str:
 def requires_user(func: Callable) -> bool:
     sig = inspect.signature(func)
     if list(sig.parameters)[0] == "user":
-        print(sig.parameters["user"].annotation)
         return sig.parameters["user"].annotation == User
     return False
 

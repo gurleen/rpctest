@@ -1,7 +1,7 @@
 import functools
 from loguru import logger
 from typing import List, Callable
-from models import User, UserModel
+from models import User, UserModel, generate_pass_hash
 from beartype import beartype
 
 from beartype.roar import BeartypeDecorHintPep585DeprecationWarning
@@ -50,9 +50,11 @@ async def login(username: str, password: str) -> str:
 
 
 @remote_proc
-async def change_password(user: User, new_pass: str) -> str:
-    print(user)
-    return "hello"
+async def change_password(user: User, new_pass: str) -> UserModel:
+    hashed = generate_pass_hash(new_pass)
+    user.password = hashed
+    await user.save()
+    return await UserModel.from_tortoise_orm(user)
 
 
 @remote_proc
