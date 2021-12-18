@@ -6,7 +6,7 @@ from loguru import logger
 from tortoise import Tortoise, run_async
 from tortoise.contrib.pydantic.base import PydanticListModel, PydanticModel
 from models import User
-from decorator import rpc_functions
+from framework.decorator import rpc_functions
 from operator import itemgetter as get
 from typing import Any, Callable
 from beartype.roar import BeartypeException

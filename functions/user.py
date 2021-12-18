@@ -1,28 +1,11 @@
-import functools
-from loguru import logger
-from typing import List, Callable
+from typing import List
+from framework.decorator import remote_proc
 from models import User, UserModel, generate_pass_hash
-from beartype import beartype
 
 from beartype.roar import BeartypeDecorHintPep585DeprecationWarning
 from warnings import simplefilter
 
 simplefilter("ignore", BeartypeDecorHintPep585DeprecationWarning)
-
-
-rpc_functions = {}
-
-def remote_proc_deco(func):
-    rpc_functions[func.__name__] = func
-    @functools.wraps(func)
-    def wrapper_decorator(*args, **kwargs):
-        value = func(*args, **kwargs)
-        return value
-    return wrapper_decorator
-
-
-def remote_proc(func: Callable) -> Callable:
-    return remote_proc_deco(beartype(func))
 
 
 @remote_proc
