@@ -40,8 +40,8 @@ The server will return the result of the procedure call:
 
 ```json
 {
-    "success": True,
-    "time": '2021-12-18T18:07:28.718815', 
+    "success": true,
+    "time": "2021-12-18T18:07:28.718815", 
     "value": 3
 }
 ```
@@ -50,7 +50,7 @@ If an error occured during the request, a response like this will be returned:
 
 ```json
 {
-    "success": False,
+    "success": false,
     "error": "<error message>"
 }
 ```
