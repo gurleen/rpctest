@@ -47,3 +47,7 @@ async def change_password(
 @remote_proc
 async def requires_auth(user: User = Depends(current_user)) -> str:
     return "You're logged in!"
+
+@remote_proc
+async def add(a: int, b: int) -> int:
+    return a + b

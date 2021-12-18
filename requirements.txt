@@ -1,0 +1,8 @@
+beartype==0.9.1
+boltons==21.0.0
+jose==1.0.0
+loguru==0.5.3
+orjson==3.6.5
+passlib==1.7.4
+python_jose==3.3.0
+tortoise==0.1.1
