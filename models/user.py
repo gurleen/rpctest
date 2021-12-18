@@ -16,6 +16,7 @@ class User(Model):
     username = fields.CharField(max_length=64)
     password = fields.CharField(max_length=64)
     created_at = fields.DatetimeField(auto_now_add=True)
+    friends = fields.ManyToManyField("models.User")
 
     def verify(self, plain_pass):
         return pwd_context.verify(plain_pass, self.password)
@@ -32,6 +33,7 @@ class User(Model):
     async def get_user_from_token(token: str) -> "User":
         decoded = jwt.decode(token, SECRET_KEY, algorithms="HS256")
         return await User.get(id=decoded.pop("user_id"))
+
 
 UserModel = pydantic_model_creator(User, exclude=("password",))
 

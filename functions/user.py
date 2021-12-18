@@ -1,6 +1,8 @@
 from typing import List
 from framework.decorator import remote_proc
+from framework.depends import Depends
 from models import User, UserModel, generate_pass_hash
+from depends import current_user
 
 from beartype.roar import BeartypeDecorHintPep585DeprecationWarning
 from warnings import simplefilter
@@ -33,7 +35,9 @@ async def login(username: str, password: str) -> str:
 
 
 @remote_proc
-async def change_password(user: User, new_pass: str) -> UserModel:
+async def change_password(
+    new_pass: str, user: User = Depends(current_user)
+) -> UserModel:
     hashed = generate_pass_hash(new_pass)
     user.password = hashed
     await user.save()
@@ -41,5 +45,5 @@ async def change_password(user: User, new_pass: str) -> UserModel:
 
 
 @remote_proc
-async def add(a: int, b: int) -> int:
-    return a + b
+async def requires_auth(user: User = Depends(current_user)) -> str:
+    return "You're logged in!"

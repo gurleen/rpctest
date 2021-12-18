@@ -7,14 +7,14 @@ from boltons.socketutils import BufferedSocket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Connect the socket to the port where the server is listening
-server_address = ('localhost', 5000)
+server_address = ("localhost", 5000)
 sock.connect(server_address)
 bufsock = BufferedSocket(sock, maxsize=64 ** 2)
 
 payload = {
-    "function": "change_password",
-    "args": ["password2"],
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.ZT-ypcqw58gj7i_V4PShR0xUfTFz0DRcxf74xGjk49Q"
+    "function": "get_friends",
+    "args": [],
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxfQ.ZT-ypcqw58gj7i_V4PShR0xUfTFz0DRcxf74xGjk49Q",
 }
 
 d = json.dumps(payload).encode("utf-8") + b"\r\n"
